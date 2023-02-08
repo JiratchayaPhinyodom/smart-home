@@ -4,6 +4,7 @@ import os
 from pydantic import BaseModel
 from typing import Optional
 from pymongo import MongoClient
+from fastapi.middleware.cors import CORSMiddleware
 load_dotenv(".env")
 
 USER = os.getenv("username")
@@ -21,6 +22,16 @@ class Bulb(BaseModel):
 
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
@@ -50,7 +61,7 @@ def send_bulb_to_front():
     return {"results":r}
 
 # Hard
-#sent data to hardware
+#hardware get data from back
 @app.get("/hard/get_status")
 def get_status():
     res = get_all_bulb_status()
