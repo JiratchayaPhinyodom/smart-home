@@ -34,7 +34,7 @@ def get_all_bulb_status():
     
 
 #Front send data to back when user interact on webpage
-@app.post("/bulb/request_front")
+@app.post("/front/request")
 def collect_data(bulb: Bulb = Body()):
     bulbs = bulb_collecton.find({"bulb_id":bulb.bulb_id}, {"_id": False})
     if bulbs:
@@ -44,20 +44,20 @@ def collect_data(bulb: Bulb = Body()):
         return {"Data has been collected."}
 
 #Send data to front update status
-@app.get("/bulb/send_front")
+@app.get("/front/get_status")
 def send_bulb_to_front():
     r = get_all_bulb_status()
     return {"results":r}
 
 # Hard
 #sent data to hardware
-@app.get("/get_status/")
+@app.get("/hard/get_status")
 def get_status():
     res = get_all_bulb_status()
     return res
 
 #Hard send status to back
-@app.post("/send_status")
+@app.post("/hard/send_status")
 def reciecve_status(bulb: Bulb):
     bulbs = bulb_collecton.find({"bulb_id":bulb.bulb_id}, {"_id": False})
     if bulbs:
@@ -65,7 +65,6 @@ def reciecve_status(bulb: Bulb):
                                 {"$set": {"is_auto_or_manual": bulb.is_auto_or_manual, 
                                             "is_it_open": bulb.is_it_open}})
         return {"Data has been updated."}
-    
 
 
 
